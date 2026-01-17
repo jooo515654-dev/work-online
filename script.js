@@ -798,3 +798,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // ... باقي الكود
 });
 
+// مسح جميع بيانات localStorage
+localStorage.removeItem('userData');
+localStorage.removeItem('userEmail');
+localStorage.removeItem('userRegistered');
+localStorage.removeItem('adminUsers');
+localStorage.removeItem('adminNotifications');
+localStorage.removeItem('adminApprovals');
+localStorage.removeItem('adminRejections');
+localStorage.removeItem('pendingUsers');
+localStorage.removeItem('userRegistrations');
+localStorage.removeItem('accountDeletionNotice');
+localStorage.removeItem('userRejection');
+
+// تأكيد المسح
+console.log('✅ تم مسح جميع المستخدمين والبيانات');
+console.log('📊 حالة النظام الآن:');
+console.log('- userData:', localStorage.getItem('userData'));
+console.log('- adminUsers:', localStorage.getItem('adminUsers'));
