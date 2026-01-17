@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Portal - Professional Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔒</text></svg>">
+</head>
+<body class="user-portal">
+    <!-- Keyboard Shortcuts Help -->
+    <div id="shortcutHelp" class="shortcut-help">
+        <h3><i class="fas fa-keyboard"></i> Keyboard Shortcuts</h3>
+        <p><kbd>Ctrl + H</kbd>: Show Help</p>
+        <p><kbd>Ctrl + T</kbd>: View Tasks</p>
+        <p><kbd>Ctrl + M</kbd>: Messages</p>
+        <p><kbd>Ctrl + C</kbd>: View Coins</p>
+        <p><kbd>Ctrl + P</kbd>: Profile</p>
+        <button onclick="hideShortcutHelp()">Close</button>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Registration Section (Initial View) -->
+        <div id="registrationSection" class="section active">
+            <div class="logo-header">
+                <div class="lmos-icons">
+                    <i class="fas fa-shield-alt"></i>
+                    <i class="fas fa-tasks"></i>
+                    <i class="fas fa-chart-line"></i>
+                    <i class="fas fa-database"></i>
+                    <i class="fas fa-network-wired"></i>
+                </div>
+                <h1><i class="fas fa-user-plus"></i> Professional Portal Registration</h1>
+                <p class="subtitle">Secure Account Setup & Task Management System</p>
+            </div>
+            
+            <div class="registration-form">
+                <div class="form-header">
+                    <h2><i class="fas fa-id-card"></i> Account Details</h2>
+                    <p>Enter your information for administrator verification</p>
+                </div>
+                
+                <form id="registrationForm">
+                    <!-- Profile Picture Preview -->
+                    <div class="profile-picture-section">
+                        <div class="profile-preview">
+                            <img id="profilePreview" src="https://ui-avatars.com/api/?name=User&background=2c3e50&color=fff&size=200" alt="Default Profile">
+                        </div>
+                        <p class="profile-note">Default profile picture assigned. Customization available after approval.</p>
+                    </div>
+                    
+                    <!-- Form Fields -->
+                    <div class="form-group">
+                        <label for="userName"><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" id="userName" required placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userEmail"><i class="fas fa-envelope"></i> Email Address</label>
+                        <input type="email" id="userEmail" required placeholder="professional@example.com">
+                        <div class="input-note">Must be a valid professional email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userPassword"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="userPassword" required minlength="8" placeholder="Minimum 8 characters">
+                        <div class="password-strength">
+                            <div class="strength-bar"></div>
+                            <span class="strength-text">Password strength: <span id="strengthText">None</span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword"><i class="fas fa-lock"></i> Confirm Password</label>
+                        <input type="password" id="confirmPassword" required placeholder="Re-enter your password">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userRole"><i class="fas fa-briefcase"></i> Professional Role</label>
+                        <select id="userRole" required>
+                            <option value="">Select your role</option>
+                            <option value="developer">Developer</option>
+                            <option value="designer">Designer</option>
+                            <option value="writer">Content Writer</option>
+                            <option value="analyst">Data Analyst</option>
+                            <option value="manager">Project Manager</option>
+                        </select>
+                    </div>
+                    
+                    <div class="terms-section">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <label for="agreeTerms">I agree to the platform terms and understand that account approval is required</label>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Submit for Approval
+                    </button>
+                    
+                    <div class="security-note">
+                        <i class="fas fa-info-circle"></i> All data is encrypted and transmitted securely. Right-click functionality is disabled for security.
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Waiting for Approval Section -->
+        <div id="waitingSection" class="section hidden">
+            <div class="waiting-container">
+                <div class="waiting-icon">
+                    <i class="fas fa-user-clock"></i>
+                </div>
+                <h2><i class="fas fa-hourglass-half"></i> Awaiting Administrator Approval</h2>
+                <p class="waiting-message">Your account information has been submitted and is pending review.</p>
+                
+                <div class="status-card">
+                    <h3><i class="fas fa-clipboard-check"></i> Submission Status</h3>
+                    <div class="status-item">
+                        <span class="status-label">Registration Data:</span>
+                        <span class="status-value approved"><i class="fas fa-check-circle"></i> Submitted</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Admin Review:</span>
+                        <span class="status-value pending"><i class="fas fa-clock"></i> Pending</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Account Activation:</span>
+                        <span class="status-value waiting"><i class="fas fa-pause-circle"></i> Waiting</span>
+                    </div>
+                </div>
+                
+                <div class="instructions">
+                    <h4><i class="fas fa-bell"></i> What happens next?</h4>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> You will receive notification when approved</li>
+                        <li><i class="fas fa-tasks"></i> Tasks will be assigned by administrator</li>
+                        <li><i class="fas fa-comments"></i> Messages may be sent during review process</li>
+                        <li><i class="fas fa-coins"></i> Coin system activates upon approval</li>
+                    </ul>
+                </div>
+                
+                <div class="refresh-notice">
+                    <i class="fas fa-sync-alt"></i> This page will update automatically when your account is approved.
+                </div>
+            </div>
+        </div>
+        
+        <!-- User Dashboard (After Approval) -->
+        <div id="dashboardSection" class="section hidden">
+            <header class="dashboard-header">
+                <div class="header-left">
+                    <div class="lmos-icons-small">
+                        <i class="fas fa-shield-alt"></i>
+                        <i class="fas fa-tasks"></i>
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h1><i class="fas fa-columns"></i> Professional Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <div class="user-info">
+                        <img id="dashboardProfile" src="https://ui-avatars.com/api/?name=User&background=2c3e50&color=fff&size=40" alt="Profile">
+                        <span id="dashboardName">User Name</span>
+                    </div>
+                    <div class="coin-display" id="coinDisplay">
+                        <i class="fas fa-coins"></i>
+                        <span id="coinCount">0</span> Coins
+                    </div>
+                    <button class="btn-icon" onclick="toggleMessages()" title="Messages">
+                        <i class="fas fa-envelope"></i>
+                        <span class="notification-badge" id="messageBadge">0</span>
+                    </button>
+                    <button class="btn-icon" onclick="showShortcutHelp()" title="Keyboard Shortcuts">
+                        <i class="fas fa-keyboard"></i>
+                    </button>
+                </div>
+            </header>
+            
+            <div class="dashboard-content">
+                <!-- Messages Panel -->
+                <div id="messagesPanel" class="messages-panel hidden">
+                    <div class="messages-header">
+                        <h3><i class="fas fa-comments"></i> Messages from Administrator</h3>
+                        <button onclick="toggleMessages()" class="close-btn"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="messages-list" id="messagesList">
+                        <!-- Messages will appear here -->
+                    </div>
+                </div>
+                
+                <!-- Tasks Section -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-tasks"></i> Assigned Tasks</h2>
+                        <div class="task-stats">
+                            <span class="stat"><i class="fas fa-list-ol"></i> Total: <span id="totalTasks">0</span></span>
+                            <span class="stat"><i class="fas fa-check-circle"></i> Completed: <span id="completedTasks">0</span></span>
+                            <span class="stat"><i class="fas fa-clock"></i> Pending: <span id="pendingTasks">0</span></span>
+                        </div>
+                    </div>
+                    
+                    <div class="tasks-container" id="tasksContainer">
+                        <!-- Tasks will appear here -->
+                        <div class="no-tasks" id="noTasksMessage">
+                            <i class="fas fa-clipboard-list"></i>
+                            <p>No tasks assigned yet. Tasks will appear here once assigned by the administrator.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Progress Tracking -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-chart-line"></i> Progress Tracking</h2>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-card">
+                            <div class="progress-info">
+                                <h4><i class="fas fa-calendar-day"></i> Daily Completion Rate</h4>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="dailyProgress" style="width: 0%"></div>
+                                </div>
+                                <div class="progress-text" id="dailyProgressText">0%</div>
+                            </div>
+                        </div>
+                        <div class="progress-card">
+                            <div class="progress-info">
+                                <h4><i class="fas fa-award"></i> Overall Performance</h4>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="overallProgress" style="width: 0%"></div>
+                                </div>
+                                <div class="progress-text" id="overallProgressText">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-history"></i> Recent Activity</h2>
+                    </div>
+                    <div class="activity-list" id="activityList">
+                        <div class="activity-item">
+                            <i class="fas fa-user-check"></i>
+                            <div class="activity-details">
+                                <p>Account submitted for approval</p>
+                                <span class="activity-time">Just now</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="dashboard-footer">
+                <div class="footer-left">
+                    <span class="status-indicator active"><i class="fas fa-circle"></i> Account Active</span>
+                    <span id="lastUpdated">Last updated: Just now</span>
+                </div>
+                <div class="footer-right">
+                    <span><i class="fas fa-keyboard"></i> Press <kbd>Ctrl+H</kbd> for shortcuts</span>
+                </div>
+            </footer>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

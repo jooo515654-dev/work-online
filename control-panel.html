@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Control Panel - User Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-panel {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --danger-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+        }
+    </style>
+</head>
+<body class="admin-panel">
+    <!-- Admin Panel Container -->
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="admin-sidebar">
+            <div class="sidebar-header">
+                <div class="admin-lmos-icons">
+                    <i class="fas fa-cogs"></i>
+                    <i class="fas fa-users-cog"></i>
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <h2><i class="fas fa-sliders-h"></i> Control Panel</h2>
+                <p class="admin-subtitle">User Management System</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="#" class="nav-item" data-section="users">
+                    <i class="fas fa-users"></i> User Management
+                    <span class="nav-badge" id="pendingUsersCount">0</span>
+                </a>
+                <a href="#" class="nav-item" data-section="tasks">
+                    <i class="fas fa-tasks"></i> Task Assignment
+                </a>
+                <a href="#" class="nav-item" data-section="messages">
+                    <i class="fas fa-comments"></i> User Messages
+                </a>
+                <a href="#" class="nav-item" data-section="payments">
+                    <i class="fas fa-coins"></i> Payment & Coins
+                </a>
+                <a href="#" class="nav-item" data-section="analytics">
+                    <i class="fas fa-chart-bar"></i> Analytics
+                </a>
+                <a href="#" class="nav-item" data-section="settings">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="admin-status">
+                    <i class="fas fa-circle online"></i>
+                    <span>System Online</span>
+                </div>
+                <div class="quick-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-user-clock"></i>
+                        <span id="sidebarPending">0 Pending</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-coins"></i>
+                        <span id="sidebarCoins">0 Coins</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="admin-main">
+            <!-- Top Bar -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1 id="adminSectionTitle">Dashboard</h1>
+                    <div class="breadcrumb">
+                        <span>Control Panel</span> / <span id="currentSection">Dashboard</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="admin-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search users, tasks..." id="adminSearch">
+                    </div>
+                    <div class="admin-notifications">
+                        <button class="btn-icon" title="Notifications">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="adminNotificationBadge">3</span>
+                        </button>
+                    </div>
+                    <button class="btn-primary" id="refreshData">
+                        <i class="fas fa-sync-alt"></i> Refresh Data
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Dashboard Section -->
+            <section id="dashboardSection" class="admin-section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon total-users">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalUsersCount">0</h3>
+                            <p>Total Users</p>
+                        </div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i> <span>12%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon pending-approvals">
+                            <i class="fas fa-user-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="pendingApprovalsCount">0</h3>
+                            <p>Pending Approvals</p>
+                        </div>
+                        <div class="stat-trend">
+                            <i class="fas fa-clock"></i> <span>Require Action</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon active-tasks">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="activeTasksCount">0</h3>
+                            <p>Active Tasks</p>
+                        </div>
+                        <div class="stat-trend">
+                            <i class="fas fa-list-ol"></i> <span>In Progress</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon total-coins">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalCoinsDistributed">0</h3>
+                            <p>Coins Distributed</p>
+                        </div>
+                        <div class="stat-trend">
+                            <i class="fas fa-hand-holding-usd"></i> <span>Rewards</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-content">
+                    <div class="content-left">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-user-check"></i> Recent Registrations</h3>
+                                <button class="btn-sm">View All</button>
+                            </div>
+                            <div class="card-body">
+                                <table class="admin-table" id="recentUsersTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Users will appear here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-right">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-tachometer-alt"></i> System Overview</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="system-metrics">
+                                    <div class="metric">
+                                        <span class="metric-label">Platform Uptime</span>
+                                        <div class="metric-bar">
+                                            <div class="metric-fill" style="width: 99.8%"></div>
+                                        </div>
+                                        <span class="metric-value">99.8%</span>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="metric-label">Task Completion Rate</span>
+                                        <div class="metric-bar">
+                                            <div class="metric-fill" style="width: 76%"></div>
+                                        </div>
+                                        <span class="metric-value">76%</span>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="metric-label">User Satisfaction</span>
+                                        <div class="metric-bar">
+                                            <div class="metric-fill" style="width: 92%"></div>
+                                        </div>
+                                        <span class="metric-value">92%</span>
+                                    </div>
+                                </div>
+                                <div class="quick-actions">
+                                    <h4>Quick Actions</h4>
+                                    <div class="action-buttons">
+                                        <button class="btn-action" onclick="showSection('users')">
+                                            <i class="fas fa-user-plus"></i> Approve Users
+                                        </button>
+                                        <button class="btn-action" onclick="showSection('tasks')">
+                                            <i class="fas fa-tasks"></i> Assign Task
+                                        </button>
+                                        <button class="btn-action" onclick="showSection('messages')">
+                                            <i class="fas fa-envelope"></i> Send Message
+                                        </button>
+                                        <button class="btn-action" onclick="showSection('payments')">
+                                            <i class="fas fa-coins"></i> Distribute Coins
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- User Management Section -->
+             
+            <section id="usersSection" class="admin-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-users"></i> User Management</h2>
+                    <div class="section-actions">
+                        <div class="filter-controls">
+                            <select id="userFilter">
+                                <option value="all">All Users</option>
+                                <option value="pending">Pending Approval</option>
+                                <option value="active">Active</option>
+                                <option value="suspended">Suspended</option>
+                            </select>
+                            <button class="btn-primary" id="exportUsers">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <table class="admin-table" id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Profile</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Coins</th>
+                                    <th>Registration Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Users will appear here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- User Detail Modal -->
+                <div id="userDetailModal" class="modal hidden">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3><i class="fas fa-user-edit"></i> User Details</h3>
+                            <button class="close-modal" onclick="closeModal('userDetailModal')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="userDetailContent">
+                            <!-- User details will appear here -->
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn-secondary" onclick="closeModal('userDetailModal')">Close</button>
+                            <button class="btn-primary" id="saveUserChanges">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Task Assignment Section -->
+            <section id="tasksSection" class="admin-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-tasks"></i> Task Assignment</h2>
+                    <button class="btn-primary" id="createTaskBtn">
+                        <i class="fas fa-plus"></i> Create New Task
+                    </button>
+                </div>
+                
+                <div class="task-management">
+                    <div class="task-create-card">
+                        <h3><i class="fas fa-edit"></i> Create/Edit Task</h3>
+                        <form id="taskForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="taskTitle"><i class="fas fa-heading"></i> Task Title</label>
+                                    <input type="text" id="taskTitle" placeholder="Enter task title" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="assignTo"><i class="fas fa-user"></i> Assign To</label>
+                                    <select id="assignTo" required>
+                                        <option value="">Select user</option>
+                                        <!-- Users will be populated here -->
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="taskDescription"><i class="fas fa-align-left"></i> Description</label>
+                                <textarea id="taskDescription" rows="3" placeholder="Detailed task description..." required></textarea>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="dueDate"><i class="fas fa-calendar-alt"></i> Due Date</label>
+                                    <input type="datetime-local" id="dueDate" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="priority"><i class="fas fa-exclamation-circle"></i> Priority</label>
+                                    <select id="priority" required>
+                                        <option value="low">Low</option>
+                                        <option value="medium" selected>Medium</option>
+                                        <option value="high">High</option>
+                                        <option value="urgent">Urgent</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="paymentAmount"><i class="fas fa-dollar-sign"></i> Payment Amount</label>
+                                    <input type="number" id="paymentAmount" min="0" step="0.01" placeholder="0.00">
+                                </div>
+                                <div class="form-group">
+                                    <label for="coinReward"><i class="fas fa-coins"></i> Coin Reward</label>
+                                    <input type="number" id="coinReward" min="0" placeholder="0">
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="reset" class="btn-secondary">
+                                    <i class="fas fa-times"></i> Clear
+                                </button>
+                                <button type="submit" class="btn-primary">
+                                    <i class="fas fa-paper-plane"></i> Assign Task
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="task-list-card">
+                        <h3><i class="fas fa-list-ol"></i> Assigned Tasks</h3>
+                        <div class="task-list" id="adminTaskList">
+                            <!-- Tasks will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Messages Section -->
+            <section id="messagesSection" class="admin-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-comments"></i> User Communications</h2>
+                    <button class="btn-primary" id="sendMessageBtn">
+                        <i class="fas fa-paper-plane"></i> Send New Message
+                    </button>
+                </div>
+                
+                <div class="messages-management">
+                    <div class="message-compose">
+                        <h3><i class="fas fa-edit"></i> Compose Message</h3>
+                        <form id="messageForm">
+                            <div class="form-group">
+                                <label for="messageRecipient"><i class="fas fa-user"></i> Recipient</label>
+                                <select id="messageRecipient" required>
+                                    <option value="">Select user</option>
+                                    <!-- Users will be populated here -->
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="messageSubject"><i class="fas fa-tag"></i> Subject</label>
+                                <input type="text" id="messageSubject" placeholder="Message subject" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="messageContent"><i class="fas fa-align-left"></i> Message</label>
+                                <textarea id="messageContent" rows="5" placeholder="Type your message here..." required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="messageType"><i class="fas fa-envelope"></i> Message Type</label>
+                                <select id="messageType">
+                                    <option value="notification">Notification</option>
+                                    <option value="instruction">Instruction</option>
+                                    <option value="feedback">Feedback</option>
+                                    <option value="warning">Warning</option>
+                                    <option value="approval">Approval Notice</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn-primary">
+                                    <i class="fas fa-paper-plane"></i> Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="messages-history">
+                        <h3><i class="fas fa-history"></i> Message History</h3>
+                        <div class="messages-filter">
+                            <input type="text" placeholder="Search messages..." id="messageSearch">
+                            <select id="messageHistoryFilter">
+                                <option value="all">All Messages</option>
+                                <option value="today">Today</option>
+                                <option value="unread">Unread</option>
+                            </select>
+                        </div>
+                        <div class="messages-list" id="adminMessagesList">
+                            <!-- Messages will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Payment & Coins Section -->
+            <section id="paymentsSection" class="admin-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-coins"></i> Payment & Coin Management</h2>
+                    <div class="section-actions">
+                        <button class="btn-primary" id="distributeCoinsBtn">
+                            <i class="fas fa-gift"></i> Distribute Coins
+                        </button>
+                        <button class="btn-secondary" id="processPaymentBtn">
+                            <i class="fas fa-dollar-sign"></i> Process Payment
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="payment-management">
+                    <div class="payment-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalPayments">$0.00</h3>
+                                <p>Total Payments Processed</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="totalCoinsIssued">0</h3>
+                                <p>Total Coins Issued</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="usersWithCoins">0</h3>
+                                <p>Users With Coins</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-actions">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-gift"></i> Distribute Coins</h3>
+                            </div>
+                            <div class="card-body">
+                                <form id="coinDistributionForm">
+                                    <div class="form-group">
+                                        <label for="coinUserSelect"><i class="fas fa-user"></i> Select User</label>
+                                        <select id="coinUserSelect" required>
+                                            <option value="">Select user</option>
+                                            <!-- Users will be populated here -->
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="coinAmount"><i class="fas fa-coins"></i> Coin Amount</label>
+                                        <input type="number" id="coinAmount" min="1" max="10000" value="100" required>
+                                        <div class="input-note">Coins are non-withdrawable and for display only</div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="coinReason"><i class="fas fa-sticky-note"></i> Reason for Distribution</label>
+                                        <select id="coinReason" required>
+                                            <option value="task_completion">Task Completion</option>
+                                            <option value="bonus">Performance Bonus</option>
+                                            <option value="milestone">Project Milestone</option>
+                                            <option value="quality">Quality Work</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="coinMessage"><i class="fas fa-comment"></i> Message (Optional)</label>
+                                        <textarea id="coinMessage" rows="2" placeholder="Add a message for the user..."></textarea>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn-primary">
+                                        <i class="fas fa-paper-plane"></i> Distribute Coins
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-dollar-sign"></i> Process Payment</h3>
+                            </div>
+                            <div class="card-body">
+                                <form id="paymentForm">
+                                    <div class="form-group">
+                                        <label for="paymentUser"><i class="fas fa-user"></i> Select User</label>
+                                        <select id="paymentUser" required>
+                                            <option value="">Select user</option>
+                                            <!-- Users will be populated here -->
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="paymentTask"><i class="fas fa-tasks"></i> For Task (Optional)</label>
+                                        <select id="paymentTask">
+                                            <option value="">Select task</option>
+                                            <!-- Tasks will be populated here -->
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="paymentAmountInput"><i class="fas fa-dollar-sign"></i> Payment Amount</label>
+                                        <input type="number" id="paymentAmountInput" min="0.01" step="0.01" placeholder="0.00" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="paymentMethod"><i class="fas fa-credit-card"></i> Payment Method</label>
+                                        <select id="paymentMethod" required>
+                                            <option value="paypal">PayPal</option>
+                                            <option value="bank_transfer">Bank Transfer</option>
+                                            <option value="stripe">Stripe</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="paymentNotes"><i class="fas fa-sticky-note"></i> Notes</label>
+                                        <textarea id="paymentNotes" rows="2" placeholder="Payment details..."></textarea>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn-primary">
+                                        <i class="fas fa-check-circle"></i> Mark as Paid
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-history">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-history"></i> Recent Transactions</h3>
+                            </div>
+                            <div class="card-body">
+                                <table class="admin-table" id="transactionsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>User</th>
+                                            <th>Type</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Notes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Transactions will appear here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Analytics Section -->
+            <section id="analyticsSection" class="admin-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-bar"></i> Platform Analytics</h2>
+                    <div class="analytics-period">
+                        <select id="analyticsPeriod">
+                            <option value="7days">Last 7 Days</option>
+                            <option value="30days" selected>Last 30 Days</option>
+                            <option value="90days">Last 90 Days</option>
+                            <option value="year">This Year</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="analytics-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-user-plus"></i> User Registrations</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="registrationsChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-tasks"></i> Task Completion</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="tasksChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-coins"></i> Coin Distribution</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="coinsChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-dollar-sign"></i> Revenue Overview</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="analytics-details">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-table"></i> Performance Metrics</h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="admin-table" id="metricsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Metric</th>
+                                        <th>Current</th>
+                                        <th>Previous</th>
+                                        <th>Change</th>
+                                        <th>Trend</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>User Activity</td>
+                                        <td>84%</td>
+                                        <td>79%</td>
+                                        <td>+5%</td>
+                                        <td><i class="fas fa-arrow-up text-success"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Task Completion Rate</td>
+                                        <td>76%</td>
+                                        <td>72%</td>
+                                        <td>+4%</td>
+                                        <td><i class="fas fa-arrow-up text-success"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Average Task Time</td>
+                                        <td>2.3 days</td>
+                                        <td>2.7 days</td>
+                                        <td>-0.4 days</td>
+                                        <td><i class="fas fa-arrow-down text-success"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>User Satisfaction</td>
+                                        <td>92%</td>
+                                        <td>89%</td>
+                                        <td>+3%</td>
+                                        <td><i class="fas fa-arrow-up text-success"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Platform Uptime</td>
+                                        <td>99.8%</td>
+                                        <td>99.7%</td>
+                                        <td>+0.1%</td>
+                                        <td><i class="fas fa-arrow-up text-success"></i></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Settings Section -->
+            <section id="settingsSection" class="admin-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-cog"></i> System Settings</h2>
+                </div>
+                
+                <div class="settings-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="general">General</button>
+                        <button class="tab-btn" data-tab="security">Security</button>
+                        <button class="tab-btn" data-tab="notifications">Notifications</button>
+                        <button class="tab-btn" data-tab="integrations">Integrations</button>
+                        <button class="tab-btn" data-tab="backup">Backup</button>
+                    </div>
+                    
+                    <div class="tab-content">
+                        <div id="generalTab" class="tab-pane active">
+                            <form id="generalSettings">
+                                <div class="form-group">
+                                    <label for="siteName"><i class="fas fa-globe"></i> Site Name</label>
+                                    <input type="text" id="siteName" value="Professional Task Platform">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="adminEmail"><i class="fas fa-envelope"></i> Administrator Email</label>
+                                    <input type="email" id="adminEmail" value="admin@platform.com">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="timezone"><i class="fas fa-clock"></i> Timezone</label>
+                                    <select id="timezone">
+                                        <option value="UTC" selected>UTC</option>
+                                        <!-- More timezones would be added -->
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="dateFormat"><i class="fas fa-calendar"></i> Date Format</label>
+                                    <select id="dateFormat">
+                                        <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                        <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                        <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="autoApprove"><i class="fas fa-user-check"></i> Auto-approve Users</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="autoApprove">
+                                        <label for="autoApprove" class="toggle-slider"></label>
+                                    </div>
+                                    <div class="input-note">When enabled, new users are automatically approved</div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn-primary">
+                                        <i class="fas fa-save"></i> Save Settings
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div id="securityTab" class="tab-pane">
+                            <h3><i class="fas fa-shield-alt"></i> Security Settings</h3>
+                            <form id="securitySettings">
+                                <!-- Security settings would go here -->
+                                <div class="security-note">
+                                    <i class="fas fa-info-circle"></i> Right-click and developer tools are disabled on the user portal for security.
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <script src="admin.js"></script>
+</body>
+</html>
